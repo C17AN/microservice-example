@@ -1,6 +1,10 @@
 const express = require("express");
 const http = require("http");
-
+const https = require("https");
+const axios = require("axios");
+const dotenv = require('dotenv');
+const fs = require("fs");
+dotenv.config()
 const app = express();
 
 //
@@ -9,14 +13,6 @@ const app = express();
 
 if (!process.env.PORT) {
     throw new Error("Please specify the port number for the HTTP server with the environment variable PORT.");
-}
-
-if (!process.env.VIDEO_STORAGE_HOST) {
-    throw new Error("Please specify the host name for the video storage microservice in variable VIDEO_STORAGE_HOST.");
-}
-
-if (!process.env.VIDEO_STORAGE_PORT) {
-    throw new Error("Please specify the port number for the video storage microservice in variable VIDEO_STORAGE_PORT.");
 }
 
 //
@@ -30,22 +26,16 @@ console.log(`Forwarding video requests to ${VIDEO_STORAGE_HOST}:${VIDEO_STORAGE_
 //
 // Registers a HTTP GET route for video streaming.
 //
-app.get("/video", (req, res) => {
-    const forwardRequest = http.request( // Forward the request to the video storage microservice.
-        {
-            host: VIDEO_STORAGE_HOST,
-            port: VIDEO_STORAGE_PORT,
-            path: '/video?path=SampleVideo_1280x720_1mb.mp4', // Video path is hard-coded for the moment.
-            method: 'GET',
-            headers: req.headers
-        },
-        forwardResponse => {
-            res.writeHeader(forwardResponse.statusCode, forwardResponse.headers);
-            forwardResponse.pipe(res);
+app.get("/video", async (req, res) => {
+    const forwardRequest = await axios.get('http://localhost:5000/video', {
+        params: {
+            path: "SampleVideo_1280x720_1mb.mp4"
         }
-    );
+    })
+    const { videoSource } = forwardRequest.data
 
-    req.pipe(forwardRequest);
+    console.log(videoSource)
+    fs.createReadStream(videoSource).pipe(res)
 });
 
 //

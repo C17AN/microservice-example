@@ -1,10 +1,10 @@
-# Example-1
+# Example-3
 
-This example uses Terraform to create a resource group in Azure.
+This example uses Terraform to create a Kubernetes cluster in Azure.
 
 Run this example using:
 
 ```bash
-cd example-1/scripts
+cd example-3/scripts
 terraform apply
 ```

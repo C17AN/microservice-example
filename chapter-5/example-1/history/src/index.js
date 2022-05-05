@@ -6,7 +6,6 @@ const express = require("express");
 function setupHandlers(app) {
     // ... THIS IS A STUB MICROSERVICE: SETUP YOUR HTTP ROUTES HERE ...
 }
-
 //
 // Start the HTTP server.
 //
@@ -26,8 +25,7 @@ function startHttpServer() {
 // Application entry point.
 //
 function main() {
-    console.log("Hello world!");
-
+    console.log("Hello chanmin!");
     return startHttpServer();
 }
 

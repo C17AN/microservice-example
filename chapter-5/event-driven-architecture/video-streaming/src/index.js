@@ -14,7 +14,7 @@ function sendViewedMessage(videoPath) {
     };
 
     const requestBody = { // Body of the HTTP POST request.
-        videoPath: videoPath 
+        videoPath: videoPath
     };
 
     const req = http.request( // Send the "viewed" message to the history microservice.
@@ -48,14 +48,14 @@ function setupHandlers(app) {
                 res.sendStatus(500);
                 return;
             }
-    
+
             res.writeHead(200, {
                 "Content-Length": stats.size,
                 "Content-Type": "video/mp4",
             });
-    
-            fs.createReadStream(videoPath).pipe(res);
 
+            fs.createReadStream(videoPath).pipe(res);
+            // 영상 재생 시, HTTP를 통해 다이렉트로 시청 메시지를 전송함.
             sendViewedMessage(videoPath); // Send message to "history" microservice that this video has been "viewed".
         });
     });
@@ -68,7 +68,7 @@ function startHttpServer() {
     return new Promise(resolve => { // Wrap in a promise so we can be notified when the server has started.
         const app = express();
         setupHandlers(app);
-        
+
         const port = process.env.PORT && parseInt(process.env.PORT) || 3000;
         app.listen(port, () => {
             resolve();

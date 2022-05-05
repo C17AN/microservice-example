@@ -1,12 +1,12 @@
 version: '3'
 services:
-
   db:
-    image: mongo:4.2.8
-    container_name: db
+    image: mongo
+    container_name: mongoDB
+    
     ports:
-     - "3000:27017"
-    restart: always
+    - "4000:27017"
+    restart: always 
 
   azure-storage:
     image: azure-storage
@@ -18,8 +18,8 @@ services:
      - "3001:80"
     environment:
       - PORT=80
-      - STORAGE_ACCOUNT_NAME=spacesangsoo
-      - STORAGE_ACCESS_KEY=feMHnftP2khr+fzcHHV83NPUv1mVXRbkhpWptCPvZO/Hpo58cnAWGUKjE3PGljV4fWdTyjxJZwepRms4pBygRw==
+      - STORAGE_ACCOUNT_NAME=chanmin
+      - STORAGE_ACCESS_KEY=<애저 스토리지 액세스 키>
     restart: "no"
 
   video-streaming:
@@ -38,4 +38,3 @@ services:
       - VIDEO_STORAGE_PORT=80
     depends_on:
       - db
-    restart: "no"

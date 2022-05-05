@@ -45,7 +45,7 @@ function main() {
         .then(client => {
             const db = client.db(DBNAME);
             const videosCollection = db.collection("videos");
-        
+
             app.get("/video", (req, res) => {
                 const videoId = new mongodb.ObjectID(req.query.id);
                 videosCollection.findOne({ _id: videoId })
@@ -56,21 +56,21 @@ function main() {
                         }
 
                         console.log(`Translated id ${videoId} to path ${videoRecord.videoPath}.`);
-        
+
                         const forwardRequest = http.request( // Forward the request to the video storage microservice.
                             {
                                 host: VIDEO_STORAGE_HOST,
                                 port: VIDEO_STORAGE_PORT,
-                                path:`/video?path=${videoRecord.videoPath}`, // Video path now retrieved from the database.
+                                path: `/video?path=${videoRecord.videoPath}`, // Video path now retrieved from the database.
                                 method: 'GET',
                                 headers: req.headers
-                            }, 
+                            },
                             forwardResponse => {
                                 res.writeHeader(forwardResponse.statusCode, forwardResponse.headers);
                                 forwardResponse.pipe(res);
                             }
                         );
-                        
+
                         req.pipe(forwardRequest);
                     })
                     .catch(err => {
